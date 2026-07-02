@@ -4,8 +4,9 @@ import {
   useContext,
   useEffect,
   useState,
+  useRef,
 } from "react";
-import Loading from "../components/Loading";
+import Loading, { setProgress } from "../components/Loading";
 
 interface LoadingType {
   isLoading: boolean;
@@ -13,6 +14,7 @@ interface LoadingType {
   setLoading: (percent: number) => void;
   isSoundEnabled: boolean;
   setIsSoundEnabled: (state: boolean) => void;
+  finishLoading: () => void;
 }
 
 export const LoadingContext = createContext<LoadingType | null>(null);
@@ -21,6 +23,22 @@ export const LoadingProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(0);
   const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+  const finishLoadingRef = useRef<(() => Promise<number>) | null>(null);
+
+  useEffect(() => {
+    const progress = setProgress(setLoading);
+    finishLoadingRef.current = progress.loaded;
+    
+    return () => progress.clear();
+  }, []);
+
+  const finishLoading = () => {
+    if (finishLoadingRef.current) {
+      finishLoadingRef.current();
+    } else {
+      setLoading(100);
+    }
+  };
 
   const value = {
     isLoading,
@@ -28,8 +46,8 @@ export const LoadingProvider = ({ children }: PropsWithChildren) => {
     setLoading,
     isSoundEnabled,
     setIsSoundEnabled,
+    finishLoading,
   };
-  useEffect(() => {}, [loading]);
 
   return (
     <LoadingContext.Provider value={value as LoadingType}>

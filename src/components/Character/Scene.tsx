@@ -5,23 +5,19 @@ import { Environment, ContactShadows, PresentationControls } from "@react-three/
 import MiyaCharacter from "../MiyaCharacter";
 import { setCharTimeline, setAllTimeline } from "../utils/GsapScroll";
 import { useLoading } from "../../context/LoadingProvider";
-import { setProgress } from "../Loading";
 
 const GSAPManager = ({ charRef }: { charRef: React.RefObject<THREE.Group> }) => {
   const { camera } = useThree();
-  const { setLoading } = useLoading();
+  const { finishLoading } = useLoading();
 
   useEffect(() => {
     if (charRef.current) {
       setCharTimeline(charRef.current, camera as THREE.PerspectiveCamera);
       setAllTimeline();
 
-      const progress = setProgress((value) => setLoading(value));
-      progress.loaded().then(() => {
-        // Any post-load animations if needed
-      });
+      finishLoading();
     }
-  }, [camera, charRef, setLoading]);
+  }, [camera, charRef, finishLoading]);
 
   return null;
 };
