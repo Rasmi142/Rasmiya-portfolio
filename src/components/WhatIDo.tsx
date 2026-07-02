@@ -1,4 +1,4 @@
-import { useState } from "react";
+// Removed unused import
 import "./styles/WhatIDo.css";
 
 const WhatIDo = () => {

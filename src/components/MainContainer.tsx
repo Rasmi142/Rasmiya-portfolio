@@ -1,4 +1,4 @@
-import { lazy, PropsWithChildren, Suspense, useEffect, useState, useRef } from "react";
+import { PropsWithChildren, useEffect, useState, useRef } from "react";
 import { useLoading } from "../context/LoadingProvider";
 import About from "./About";
 import Career from "./Career";
