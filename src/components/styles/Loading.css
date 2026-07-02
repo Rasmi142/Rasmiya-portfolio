@@ -56,6 +56,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: translateY(120px);
 }
 .loading-clicked {
   transition-delay: 0ms;
@@ -70,7 +71,7 @@
   overflow: visible;
 }
 .loading-hover {
-  background-color: #a87cff;
+  background-color: #ffcc00;
   width: 250px;
   height: 120px;
   position: absolute;
@@ -272,7 +273,7 @@
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background-color: #a87cff;
+  background-color: #ffcc00;
   animation: ball25 7s infinite;
   transform: translateY(10px);
   animation-timing-function: cubic-bezier(0.3, 1.18, 0.63, 1.28);

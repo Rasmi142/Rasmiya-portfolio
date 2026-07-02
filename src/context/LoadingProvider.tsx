@@ -11,6 +11,8 @@ interface LoadingType {
   isLoading: boolean;
   setIsLoading: (state: boolean) => void;
   setLoading: (percent: number) => void;
+  isSoundEnabled: boolean;
+  setIsSoundEnabled: (state: boolean) => void;
 }
 
 export const LoadingContext = createContext<LoadingType | null>(null);
@@ -18,11 +20,14 @@ export const LoadingContext = createContext<LoadingType | null>(null);
 export const LoadingProvider = ({ children }: PropsWithChildren) => {
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(0);
+  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
 
   const value = {
     isLoading,
     setIsLoading,
     setLoading,
+    isSoundEnabled,
+    setIsSoundEnabled,
   };
   useEffect(() => {}, [loading]);
 

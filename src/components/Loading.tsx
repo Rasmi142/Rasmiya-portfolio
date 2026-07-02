@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./styles/Loading.css";
 import { useLoading } from "../context/LoadingProvider";
 
 import Marquee from "react-fast-marquee";
 
 const Loading = ({ percent }: { percent: number }) => {
-  const { setIsLoading } = useLoading();
+  const { setIsLoading, isSoundEnabled, setIsSoundEnabled } = useLoading();
   const [loaded, setLoaded] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const cinematicAudioRef = useRef<HTMLAudioElement | null>(null);
 
   if (percent >= 100) {
     setTimeout(() => {
@@ -18,6 +19,32 @@ const Loading = ({ percent }: { percent: number }) => {
       }, 1000);
     }, 600);
   }
+
+  useEffect(() => {
+    cinematicAudioRef.current = new Audio("/images/diamond_tunes-cinematic-sound-effect-327618.mp3");
+    cinematicAudioRef.current.loop = false; // Only play once
+
+    // Attempt autoplay for the loading sound
+    cinematicAudioRef.current.play().catch(() => {
+      console.log("Audio autoplay blocked by browser");
+    });
+
+    return () => {
+      if (cinematicAudioRef.current) {
+        cinematicAudioRef.current.pause();
+      }
+    };
+  }, []);
+
+  const toggleSound = () => {
+    if (isSoundEnabled) {
+      cinematicAudioRef.current?.pause();
+      setIsSoundEnabled(false);
+    } else {
+      cinematicAudioRef.current?.play().catch(console.error);
+      setIsSoundEnabled(true);
+    }
+  };
 
   useEffect(() => {
     import("./utils/initialFX").then((module) => {
@@ -46,8 +73,31 @@ const Loading = ({ percent }: { percent: number }) => {
     <>
       <div className="loading-header">
         <a href="/#" className="loader-title" data-cursor="disable">
-          Logo
+          MIYA
         </a>
+
+        {/* Sound Toggle Button */}
+        <button
+          onClick={toggleSound}
+          style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '10px',
+            zIndex: 9999999999
+          }}
+          title={isSoundEnabled ? "Mute Sound" : "Play Sound"}
+        >
+          {isSoundEnabled ? (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          ) : (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+          )}
+        </button>
+
         <div className={`loaderGame ${clicked && "loader-out"}`}>
           <div className="loaderGame-container">
             <div className="loaderGame-in">
@@ -62,8 +112,8 @@ const Loading = ({ percent }: { percent: number }) => {
       <div className="loading-screen">
         <div className="loading-marquee">
           <Marquee>
-            <span> A Creative Developer</span> <span>A Creative Designer</span>
-            <span> A Creative Developer</span> <span>A Creative Designer</span>
+            <span> A Passionate Developer</span> <span>A Passionate Full Stack </span>
+            <span> A Passionate Developer</span> <span>A Passionate Full Stack </span>
           </Marquee>
         </div>
         <div
